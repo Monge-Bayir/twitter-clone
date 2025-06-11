@@ -31,3 +31,13 @@ class FollowerDAO(BaseDao):
                 await session.commit()
                 return True
             return False
+
+    @classmethod
+    async def is_following(cls, follower_id: int, followed_id: int) -> bool:
+        async with async_session_maker() as session:
+            query = select(Follower).where(
+                Follower.follower_id == follower_id,
+                Follower.followed_id == followed_id
+            )
+            res = await session.execute(query)
+            return res.scalar_one_or_none() is not None

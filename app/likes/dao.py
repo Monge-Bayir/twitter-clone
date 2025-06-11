@@ -32,3 +32,13 @@ class LikeDAO(BaseDao):
                 await session.commit()
                 return True
             return False
+
+    @classmethod
+    async def is_liked(cls, tweet_id: int, user_id: int) -> bool:
+        async with async_session_maker() as session:
+            query = select(Like).where(
+                Like.tweet_id == tweet_id,
+                Like.user_id == user_id
+            )
+            res = await session.execute(query)
+            return res.scalar_one_or_none() is not None

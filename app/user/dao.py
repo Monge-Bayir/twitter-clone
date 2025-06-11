@@ -1,10 +1,42 @@
 from sqlalchemy import select
+from sqlalchemy.orm import selectinload
+
+from app.follower.models import Follower
 from app.user.models import User
 from app.database import async_session_maker
 from app.dao.base import BaseDao
 
 class UserDAO(BaseDao):
     model = User
+
+
+    @classmethod
+    async def get_user_by_api_key(cls, api_key: str) -> User | None:
+        async with async_session_maker() as session:
+            stmt = (
+                select(User)
+                .where(User.api_key == api_key)
+                .options(
+                    selectinload(User.followers).selectinload(Follower.follower),
+                    selectinload(User.following).selectinload(Follower.followed)
+                )
+            )
+            result = await session.execute(stmt)
+            return result.scalar_one_or_none()
+
+    @classmethod
+    async def get_user_by_user_id(user_id: int) -> User:
+        async with async_session_maker() as session:
+            stmt = (
+                select(User)
+                .where(User.id == user_id)
+                .options(
+                    selectinload(User.followers).selectinload(Follower.follower),
+                    selectinload(User.following).selectinload(Follower.followed)
+                )
+            )
+            result = await session.execute(stmt)
+            return result.scalar_one()
 
     @classmethod
     async def find_by_api_key(cls, api_key: str):
@@ -21,3 +53,16 @@ class UserDAO(BaseDao):
             await session.commit()
             await session.refresh(user)
             return user
+
+    @classmethod
+    async def get_user_profile(cls, user_id: int) -> User | None:
+        async with async_session_maker() as session:
+            result = await session.execute(
+                select(User)
+                .options(
+                    selectinload(User.followers).selectinload(Follower.follower),
+                    selectinload(User.following).selectinload(Follower.followed),
+                )
+                .where(User.id == user_id)
+            )
+            return result.scalar_one_or_none()

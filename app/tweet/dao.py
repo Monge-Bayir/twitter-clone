@@ -1,5 +1,6 @@
 from app.dao.base import BaseDao
 from app.database import async_session_maker
+from app.follower.models import Follower
 from app.tweet.models import Tweet
 from sqlalchemy import select
 from app.media.models import Media
@@ -37,3 +38,36 @@ class TweetDAO(BaseDao):
                 await session.commit()
                 return True
             return False
+
+    @classmethod
+    async def get_feed_for_user(cls, user_id: int):
+        async with async_session_maker() as session:
+            # Получаем ID пользователей, на которых подписан user_id
+            result = await session.execute(
+                select(Follower.following_id).where(Follower.follower_id == user_id)
+            )
+            following_ids = [r[0] for r in result.all()]
+            following_ids.append(user_id)  # Включаем свои твиты
+
+            # Получаем твиты этих пользователей
+            result = await session.execute(
+                select(Tweet)
+                .where(Tweet.author_id.in_(following_ids))
+                .order_by(Tweet.created_at.desc())
+                .limit(50)
+            )
+            tweets = result.scalars().all()
+
+            # Преобразуем твиты в dict с вложенными авторами и лайками
+            feed = []
+            for tweet in tweets:
+                attachments = [media.file_path for media in tweet.medias]  # предполагаем связь tweet.medias
+                likes = [{"user_id": like.user.id, "name": like.user.name} for like in tweet.likes]
+                feed.append({
+                    "id": tweet.id,
+                    "content": tweet.content,
+                    "attachments": attachments,
+                    "author": {"id": tweet.author.id, "name": tweet.author.name},
+                    "likes": likes
+                })
+            return feed
