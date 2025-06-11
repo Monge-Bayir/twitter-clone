@@ -16,9 +16,7 @@ class UserDAO(BaseDao):
             stmt = (
                 select(User)
                 .options(
-                    # Загружаем отношение followers и внутри — связанных пользователей (follower)
                     joinedload(User.followers).joinedload(Follower.follower).load_only(User.id, User.name),
-                    # Загружаем отношение following и внутри — связанных пользователей (followed)
                     joinedload(User.following).joinedload(Follower.followed).load_only(User.id, User.name),
                 )
                 .where(User.api_key == api_key)
@@ -34,19 +32,12 @@ class UserDAO(BaseDao):
                 select(User)
                 .where(User.id == user_id)
                 .options(
-                    selectinload(User.followers).selectinload(Follower.follower),
-                    selectinload(User.following).selectinload(Follower.followed)
+                    joinedload(User.followers).joinedload(Follower.follower).load_only(User.id, User.name),
+                    joinedload(User.following).joinedload(Follower.followed).load_only(User.id, User.name),
                 )
             )
             result = await session.execute(stmt)
             return result.scalar_one()
-
-    @classmethod
-    async def find_by_api_key(cls, api_key: str):
-        async with async_session_maker() as session:
-            query = select(cls.model).where(cls.model.api_key == api_key)
-            result = await session.execute(query)
-            return result.scalar_one_or_none()
 
     @classmethod
     async def create(cls, name: str, api_key: str):
