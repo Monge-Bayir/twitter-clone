@@ -1,5 +1,5 @@
 from sqlalchemy import select
-from sqlalchemy.orm import selectinload
+from sqlalchemy.orm import selectinload,joinedload
 
 from app.follower.models import Follower
 from app.user.models import User
@@ -11,18 +11,21 @@ class UserDAO(BaseDao):
 
 
     @classmethod
-    async def get_user_by_api_key(cls, api_key: str) -> User | None:
+    async def get_user_by_api_key(cls, api_key: str):
         async with async_session_maker() as session:
             stmt = (
                 select(User)
-                .where(User.api_key == api_key)
                 .options(
-                    selectinload(User.followers).selectinload(Follower.follower),
-                    selectinload(User.following).selectinload(Follower.followed)
+                    # Загружаем отношение followers и внутри — связанных пользователей (follower)
+                    joinedload(User.followers).joinedload(Follower.follower).load_only(User.id, User.name),
+                    # Загружаем отношение following и внутри — связанных пользователей (followed)
+                    joinedload(User.following).joinedload(Follower.followed).load_only(User.id, User.name),
                 )
+                .where(User.api_key == api_key)
             )
             result = await session.execute(stmt)
-            return result.scalar_one_or_none()
+            user = result.scalars().first()
+            return user
 
     @classmethod
     async def get_user_by_user_id(user_id: int) -> User:
@@ -55,7 +58,7 @@ class UserDAO(BaseDao):
             return user
 
     @classmethod
-    async def get_user_profile(cls, user_id: int) -> User | None:
+    async def get_user_profile(cls, user_id: int):
         async with async_session_maker() as session:
             result = await session.execute(
                 select(User)

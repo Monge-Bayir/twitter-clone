@@ -25,3 +25,7 @@ class UserMe(BaseModel):
 class UserMeResponse(BaseModel):
     result: str
     user: UserMe
+
+class UserCreate(BaseModel):
+    name: str
+    api_key: str
