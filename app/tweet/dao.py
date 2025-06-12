@@ -4,7 +4,6 @@ from sqlalchemy.orm import selectinload
 
 from app.dao.base import BaseDao
 from app.database import async_session_maker
-from app.follower.models import Follower
 from app.likes.models import Like
 from app.tweet.models import Tweet
 from sqlalchemy import select

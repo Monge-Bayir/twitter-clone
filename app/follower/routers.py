@@ -1,9 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException, Header
+from fastapi import APIRouter, HTTPException, Header
 
 from app.follower.dao import FollowerDAO
-from app.user.auth import get_current_user
 from app.user.dao import UserDAO
-from app.user.models import User
 
 router = APIRouter(prefix="/api/users", tags=["Followers"])
 

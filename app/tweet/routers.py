@@ -1,17 +1,9 @@
-from typing import List
-
-from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Header
+from fastapi import APIRouter, HTTPException, status, Header
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy import select
-from sqlalchemy.orm import selectinload
 
-from app.database import async_session_maker
 from app.tweet.dao import TweetDAO
-from app.tweet.models import Tweet
-from app.tweet.schemas import TweetCreate, TweetResponse, TweetCreatedResponse, TweetListResponse
-from app.user.auth import get_current_user
+from app.tweet.schemas import TweetCreate, TweetCreatedResponse
 from app.user.dao import UserDAO
-from app.user.models import User
 
 router = APIRouter(
     prefix="/api",

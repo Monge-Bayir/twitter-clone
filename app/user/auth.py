@@ -1,4 +1,4 @@
-from fastapi import Depends, Header, HTTPException, status
+from fastapi import Header, HTTPException, status
 from app.user.dao import UserDAO
 from app.user.models import User
 
@@ -12,7 +12,7 @@ async def get_current_user(x_api_key: str = Header(...)) -> User:
     return user
 
 
-from fastapi import Header, HTTPException, Depends
+from fastapi import Header, HTTPException
 
 async def get_api_key(x_api_key: str = Header(..., alias="x-api-key")):
     if not x_api_key:

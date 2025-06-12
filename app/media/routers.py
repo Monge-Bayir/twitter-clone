@@ -1,6 +1,6 @@
 import shutil
 
-from fastapi import APIRouter, UploadFile, File, Depends, Header, HTTPException
+from fastapi import APIRouter, UploadFile, File, Header, HTTPException
 
 from app.database import async_session_maker
 from app.media.models import Media

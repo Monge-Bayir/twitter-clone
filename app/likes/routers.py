@@ -1,9 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException, Header
+from fastapi import APIRouter, HTTPException, Header
 
 from app.likes.dao import LikeDAO
-from app.user.auth import get_current_user
 from app.user.dao import UserDAO
-from app.user.models import User
 
 router = APIRouter(prefix="/api/tweets", tags=["Likes"])
 

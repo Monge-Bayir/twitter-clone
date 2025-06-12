@@ -6,7 +6,6 @@ from app.follower.routers import router as router_follow
 from app.media.routers import router as router_media
 from app.user.routers import router as router_user
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
 import pathlib
 import os
 

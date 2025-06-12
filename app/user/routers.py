@@ -1,11 +1,8 @@
-from fastapi import APIRouter, Depends, Request, Header
+from fastapi import APIRouter, Header
 
-from typing import List, Annotated, Optional
+from typing import Annotated, Optional
 
-from app.user.auth import get_current_user
 from app.user.dao import UserDAO
-from app.user.models import User
-from app.user.schemas import UserCreate
 
 router = APIRouter(prefix="/api/users", tags=["Users"])
 
