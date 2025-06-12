@@ -19,7 +19,7 @@ os.makedirs("uploaded_media", exist_ok=True)
 app.mount("/uploaded_media", StaticFiles(directory="uploaded_media"), name="uploaded_media")
 
 
-# app.include_router(router_likes)
+app.include_router(router_likes)
 app.include_router(router_tweet)
 # app.include_router(router_follow)
 app.include_router(router_user)

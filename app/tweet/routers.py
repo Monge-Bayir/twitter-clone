@@ -19,12 +19,13 @@ router = APIRouter(
 )
 
 @router.get("/tweets")
-async def get_tweet_feed(api_key: str = Header(...)):
+async def get_tweet_feed():
     try:
         tweets = await TweetDAO.get_tweet()
         return {"result": True, "tweets": tweets}
 
     except Exception as e:
+        print("❌ Error while fetching tweets:", repr(e))
         return {
             "result": False,
             "error_type": "InternalServerError",

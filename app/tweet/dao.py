@@ -5,6 +5,7 @@ from sqlalchemy.orm import selectinload
 from app.dao.base import BaseDao
 from app.database import async_session_maker
 from app.follower.models import Follower
+from app.likes.models import Like
 from app.tweet.models import Tweet
 from sqlalchemy import select
 from app.media.models import Media
@@ -63,7 +64,7 @@ class TweetDAO(BaseDao):
                 select(Tweet)
                 .options(
                     selectinload(Tweet.author),
-                    selectinload(Tweet.likes),
+                    selectinload(Tweet.likes).selectinload(Like.user),
                     selectinload(Tweet.media),
                 )
             )
