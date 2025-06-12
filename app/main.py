@@ -12,7 +12,7 @@ import pathlib
 app = FastAPI()
 
 # app.include_router(router_likes)
-# app.include_router(router_tweet)
+app.include_router(router_tweet)
 # app.include_router(router_follow)
 app.include_router(router_user)
 

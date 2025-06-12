@@ -21,20 +21,24 @@ class TweetCreatedResponse(BaseModel):
         "arbitrary_types_allowed": True
     }
 
+
+class LikeInfo(BaseModel):
+    user_id: int
+    name: str
+
+class AuthorInfo(BaseModel):
+    id: int
+    name: str
+
 class TweetResponse(BaseModel):
     id: int
     content: str
     attachments: List[str] = []
-    author: User
-    likes: List[Like] = []
-    model_config = {
-        "arbitrary_types_allowed": True
-    }
-
+    author: AuthorInfo
+    likes: List[LikeInfo] = []
 
 class TweetListResponse(BaseModel):
     result: bool
-    tweets: List[TweetResponse]
-    model_config = {
-        "arbitrary_types_allowed": True
-    }
+    tweets: Optional[List[TweetResponse]] = None
+    error_type: Optional[str] = None
+    error_message: Optional[str] = None

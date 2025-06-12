@@ -60,3 +60,9 @@ class UserDAO(BaseDao):
                 .where(User.id == user_id)
             )
             return result.scalar_one_or_none()
+
+    @classmethod
+    async def find_by_api_key(cls, api_key: str):
+        async with async_session_maker() as session:
+            result = await session.execute(select(User).where(User.api_key == api_key))
+            return result.scalar_one_or_none()
