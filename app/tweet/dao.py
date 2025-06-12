@@ -1,3 +1,5 @@
+from datetime import datetime
+from fastapi import HTTPException
 from sqlalchemy.orm import selectinload
 
 from app.dao.base import BaseDao
@@ -14,13 +16,26 @@ class TweetDAO(BaseDao):
     @classmethod
     async def create(cls, content: str, author_id: int, media_ids: list[int] = None):
         async with async_session_maker() as session:
-            tweet = Tweet(content=content, author_id=author_id)
+            tweet = Tweet(
+                content=content,
+                author_id=author_id,
+                created_at=datetime.now()
+            )
             session.add(tweet)
-            await session.flush()
+            await session.flush()  # нужно получить tweet.id до коммита
 
             if media_ids:
-                result = await session.execute(select(Media).where(Media.id.in_(media_ids)))
+                result = await session.execute(
+                    select(Media).where(Media.id.in_(media_ids))
+                )
                 medias = result.scalars().all()
+
+                if len(medias) != len(media_ids):
+                    raise HTTPException(
+                        status_code=400,
+                        detail="One or more media IDs are invalid"
+                    )
+
                 for media in medias:
                     media.tweet_id = tweet.id
 

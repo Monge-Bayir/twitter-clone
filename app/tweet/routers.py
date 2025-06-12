@@ -6,7 +6,6 @@ from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
 from app.database import async_session_maker
-from app.media.dao import MediaDAO
 from app.tweet.dao import TweetDAO
 from app.tweet.models import Tweet
 from app.tweet.schemas import TweetCreate, TweetResponse, TweetCreatedResponse, TweetListResponse
@@ -65,7 +64,7 @@ async def delete_tweet(
     user = await UserDAO.find_by_api_key(api_key)
     if not user:
         raise HTTPException(status_code=401, detail="Invalid API key")
-    deleted = await TweetDAO.delete(tweet_id, user.id)
+    deleted = await TweetDAO.delete(tweet_id, user.id )
     if not deleted:
         raise HTTPException(status_code=404, detail="Tweet not found or unauthorized")
     return {"result": True}

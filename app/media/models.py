@@ -7,7 +7,7 @@ class Media(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     file_path = Column(String, nullable=False)
-    tweet_id = Column(Integer, ForeignKey("tweets.id"), nullable=False)
+    tweet_id = Column(Integer, ForeignKey("tweets.id"), nullable=True)
 
     tweet = relationship("Tweet", back_populates="media")
 
