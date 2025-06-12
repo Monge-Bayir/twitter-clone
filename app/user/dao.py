@@ -26,7 +26,7 @@ class UserDAO(BaseDao):
             return user
 
     @classmethod
-    async def get_user_by_user_id(user_id: int) -> User:
+    async def get_user_by_user_id(cls, user_id: int) -> User:
         async with async_session_maker() as session:
             stmt = (
                 select(User)
@@ -37,7 +37,7 @@ class UserDAO(BaseDao):
                 )
             )
             result = await session.execute(stmt)
-            return result.scalar_one()
+            return result.unique().scalar_one()
 
     @classmethod
     async def create(cls, name: str, api_key: str):

@@ -1,1 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+venv/
+.env
+
+# Logs and IDEs
+*.log
+.vscode/
 .idea/
+
+# Alembic
+alembic/versions/
+
+# Media
+uploaded_media/

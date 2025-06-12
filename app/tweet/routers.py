@@ -15,7 +15,7 @@ from app.user.models import User
 
 router = APIRouter(
     prefix="/api",
-    tags=["Tweets"]
+    tags=["Tweets"] 
 )
 
 @router.get("/tweets")
