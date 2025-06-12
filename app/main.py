@@ -21,7 +21,7 @@ app.mount("/uploaded_media", StaticFiles(directory="uploaded_media"), name="uplo
 
 app.include_router(router_likes)
 app.include_router(router_tweet)
-# app.include_router(router_follow)
+app.include_router(router_follow)
 app.include_router(router_user)
 app.include_router(router_media)
 

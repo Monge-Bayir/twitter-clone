@@ -1,23 +1,32 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Header
 
 from app.follower.dao import FollowerDAO
 from app.user.auth import get_current_user
+from app.user.dao import UserDAO
 from app.user.models import User
 
-router = APIRouter(prefix="/follow", tags=["Followers"])
+router = APIRouter(prefix="/api/users", tags=["Followers"])
 
-@router.post("/{user_id}")
-async def follow_user(user_id: int, user: User = Depends(get_current_user)):
+@router.post("/{user_id}/follow")
+async def follow_user(user_id: int, api_key: str = Header(...)):
+    user = await UserDAO.find_by_api_key(api_key)
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid API key")
+
     if user.id == user_id:
         raise HTTPException(status_code=400, detail="Cannot follow yourself")
     if await FollowerDAO.is_following(user.id, user_id):
         raise HTTPException(status_code=400, detail="Already following")
     await FollowerDAO.follow(user.id, user_id)
-    return {"detail": f"You are now following user {user_id}"}
+    return {"result": "True"}
 
-@router.delete("/{user_id}")
-async def unfollow_user(user_id: int, user: User = Depends(get_current_user)):
+@router.delete("/{user_id}/follow")
+async def unfollow_user(user_id: int, api_key: str = Header(...)):
+    user = await UserDAO.find_by_api_key(api_key)
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid API key")
+
     if not await FollowerDAO.is_following(user.id, user_id):
         raise HTTPException(status_code=400, detail="You are not following this user")
     await FollowerDAO.unfollow(user.id, user_id)
-    return {"detail": f"You have unfollowed user {user_id}"}
+    return {"result": "True"}

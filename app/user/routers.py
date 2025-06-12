@@ -25,8 +25,8 @@ async def get_user_me(api_key: Annotated[Optional[str], Header()] = None):
         'user': {
             'id': user.id,
             'name': user.name,
-            'followers': [{'id': x.id, 'name': x.name} for x in user.followers],
-            'following': [{'id': x.id, 'name': x.name} for x in user.following]
+            'followers': [{'id': x.follower.id, 'name': x.follower.name} for x in user.followers],
+            'following': [{'id': x.followed.id, 'name': x.followed.name} for x in user.following],
         }
     }
     return data
@@ -40,8 +40,8 @@ async def get_user_by_id(user_id: int):
         'user': {
             'id': user.id,
             'name': user.name,
-            'followers': [{'id': x.id, 'name': x.name} for x in user.followers],
-            'following': [{'id': x.id, 'name': x.name} for x in user.following]
+            'followers': [{'id': x.follower.id, 'name': x.follower.name} for x in user.followers],
+            'following': [{'id': x.followed.id, 'name': x.followed.name} for x in user.following],
         }
     }
     return data
