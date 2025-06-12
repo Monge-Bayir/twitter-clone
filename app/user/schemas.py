@@ -6,9 +6,7 @@ class UserShort(BaseModel):
     id: int
     name: str
 
-    model_config = {
-        "arbitrary_types_allowed": True
-    }
+    model_config = {"arbitrary_types_allowed": True}
 
 
 class UserMe(BaseModel):
@@ -17,14 +15,13 @@ class UserMe(BaseModel):
     followers: List[UserShort]
     following: List[UserShort]
 
-    model_config = {
-        "arbitrary_types_allowed": True
-    }
+    model_config = {"arbitrary_types_allowed": True}
 
 
 class UserMeResponse(BaseModel):
     result: str
     user: UserMe
+
 
 class UserCreate(BaseModel):
     name: str

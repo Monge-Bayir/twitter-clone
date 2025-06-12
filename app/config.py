@@ -11,8 +11,8 @@ class Settings(BaseSettings):
 
     DATABASE_URL: str = ""
 
-    @model_validator(mode='after')
-    def build_database_url(self) -> 'Settings':
+    @model_validator(mode="after")
+    def build_database_url(self) -> "Settings":
         self.DATABASE_URL = (
             f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}"
             f"@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     ALGORITHM: str
 
     class Config:
-        env_file = '.env'
+        env_file = ".env"
+
 
 settings = Settings()

@@ -17,9 +17,7 @@ class TweetDAO(BaseDao):
     async def create(cls, content: str, author_id: int, media_ids: list[int] = None):
         async with async_session_maker() as session:
             tweet = Tweet(
-                content=content,
-                author_id=author_id,
-                created_at=datetime.now()
+                content=content, author_id=author_id, created_at=datetime.now()
             )
             session.add(tweet)
             await session.flush()  # нужно получить tweet.id до коммита
@@ -32,8 +30,7 @@ class TweetDAO(BaseDao):
 
                 if len(medias) != len(media_ids):
                     raise HTTPException(
-                        status_code=400,
-                        detail="One or more media IDs are invalid"
+                        status_code=400, detail="One or more media IDs are invalid"
                     )
 
                 for media in medias:
@@ -47,7 +44,9 @@ class TweetDAO(BaseDao):
     async def delete(cls, tweet_id: int, author_id: int):
         async with async_session_maker() as session:
             result = await session.execute(
-                select(cls.model).where(cls.model.id == tweet_id, cls.model.author_id == author_id)
+                select(cls.model).where(
+                    cls.model.id == tweet_id, cls.model.author_id == author_id
+                )
             )
             tweet = result.scalar_one_or_none()
             if tweet:
@@ -60,8 +59,7 @@ class TweetDAO(BaseDao):
     async def get_tweet(cls):
         async with async_session_maker() as session:
             result = await session.execute(
-                select(Tweet)
-                .options(
+                select(Tweet).options(
                     selectinload(Tweet.author),
                     selectinload(Tweet.likes).selectinload(Like.user),
                     selectinload(Tweet.media),
@@ -71,20 +69,17 @@ class TweetDAO(BaseDao):
 
         serialized = []
         for tweet in tweets:
-            serialized.append({
-                "id": tweet.id,
-                "content": tweet.content,
-                "attachments": [media.file_path for media in tweet.media],
-                "author": {
-                    "id": tweet.author.id,
-                    "name": tweet.author.name
-                },
-                "likes": [
-                    {
-                        "user_id": like.user.id,
-                        "name": like.user.name
-                    } for like in tweet.likes
-                ]
-            })
+            serialized.append(
+                {
+                    "id": tweet.id,
+                    "content": tweet.content,
+                    "attachments": [media.file_path for media in tweet.media],
+                    "author": {"id": tweet.author.id, "name": tweet.author.name},
+                    "likes": [
+                        {"user_id": like.user.id, "name": like.user.name}
+                        for like in tweet.likes
+                    ],
+                }
+            )
 
         return serialized

@@ -14,12 +14,8 @@ class User(Base):
     tweets = relationship("Tweet", back_populates="author")
     likes = relationship("Like", back_populates="user")
     followers = relationship(
-        "Follower",
-        foreign_keys="Follower.followed_id",
-        back_populates="followed"
+        "Follower", foreign_keys="Follower.followed_id", back_populates="followed"
     )
     following = relationship(
-        "Follower",
-        foreign_keys="Follower.follower_id",
-        back_populates="follower"
+        "Follower", foreign_keys="Follower.follower_id", back_populates="follower"
     )

@@ -1,7 +1,10 @@
 from typing import Optional, List
 
 from pydantic import BaseModel
+from datetime import datetime
 
+from app.likes.models import Like
+from app.user.models import User
 
 
 class TweetCreate(BaseModel):

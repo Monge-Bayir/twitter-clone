@@ -3,6 +3,7 @@ from app.follower.models import Follower
 from app.database import async_session_maker
 from app.dao.base import BaseDao
 
+
 class FollowerDAO(BaseDao):
     model = Follower
 
@@ -21,7 +22,7 @@ class FollowerDAO(BaseDao):
             query = select(cls.model).where(
                 and_(
                     cls.model.follower_id == follower_id,
-                    cls.model.followed_id == followed_id
+                    cls.model.followed_id == followed_id,
                 )
             )
             result = await session.execute(query)
@@ -36,8 +37,7 @@ class FollowerDAO(BaseDao):
     async def is_following(cls, follower_id: int, followed_id: int) -> bool:
         async with async_session_maker() as session:
             query = select(Follower).where(
-                Follower.follower_id == follower_id,
-                Follower.followed_id == followed_id
+                Follower.follower_id == follower_id, Follower.followed_id == followed_id
             )
             res = await session.execute(query)
             return res.scalar_one_or_none() is not None

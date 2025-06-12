@@ -1,14 +1,14 @@
 from sqlalchemy import select
-from sqlalchemy.orm import selectinload,joinedload
+from sqlalchemy.orm import selectinload, joinedload
 
 from app.follower.models import Follower
 from app.user.models import User
 from app.database import async_session_maker
 from app.dao.base import BaseDao
 
+
 class UserDAO(BaseDao):
     model = User
-
 
     @classmethod
     async def get_user_by_api_key(cls, api_key: str):
@@ -16,8 +16,12 @@ class UserDAO(BaseDao):
             stmt = (
                 select(User)
                 .options(
-                    joinedload(User.followers).joinedload(Follower.follower).load_only(User.id, User.name),
-                    joinedload(User.following).joinedload(Follower.followed).load_only(User.id, User.name),
+                    joinedload(User.followers)
+                    .joinedload(Follower.follower)
+                    .load_only(User.id, User.name),
+                    joinedload(User.following)
+                    .joinedload(Follower.followed)
+                    .load_only(User.id, User.name),
                 )
                 .where(User.api_key == api_key)
             )
@@ -32,8 +36,12 @@ class UserDAO(BaseDao):
                 select(User)
                 .where(User.id == user_id)
                 .options(
-                    joinedload(User.followers).joinedload(Follower.follower).load_only(User.id, User.name),
-                    joinedload(User.following).joinedload(Follower.followed).load_only(User.id, User.name),
+                    joinedload(User.followers)
+                    .joinedload(Follower.follower)
+                    .load_only(User.id, User.name),
+                    joinedload(User.following)
+                    .joinedload(Follower.followed)
+                    .load_only(User.id, User.name),
                 )
             )
             result = await session.execute(stmt)

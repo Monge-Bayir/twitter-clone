@@ -20,10 +20,7 @@ class LikeDAO(BaseDao):
     async def unlike_tweet(cls, tweet_id: int, user_id: int):
         async with async_session_maker() as session:
             query = select(cls.model).where(
-                and_(
-                    cls.model.tweet_id == tweet_id,
-                    cls.model.user_id == user_id
-                )
+                and_(cls.model.tweet_id == tweet_id, cls.model.user_id == user_id)
             )
             result = await session.execute(query)
             like = result.scalar_one_or_none()
@@ -37,8 +34,7 @@ class LikeDAO(BaseDao):
     async def is_liked(cls, tweet_id: int, user_id: int) -> bool:
         async with async_session_maker() as session:
             query = select(Like).where(
-                Like.tweet_id == tweet_id,
-                Like.user_id == user_id
+                Like.tweet_id == tweet_id, Like.user_id == user_id
             )
             res = await session.execute(query)
             return res.scalar_one_or_none() is not None

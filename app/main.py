@@ -15,7 +15,9 @@ app = FastAPI()
 os.makedirs("uploaded_media", exist_ok=True)
 
 # Добавляем статическую раздачу файлов
-app.mount("/uploaded_media", StaticFiles(directory="uploaded_media"), name="uploaded_media")
+app.mount(
+    "/uploaded_media", StaticFiles(directory="uploaded_media"), name="uploaded_media"
+)
 
 
 app.include_router(router_likes)
@@ -32,5 +34,5 @@ DIST_DIR = BASE_DIR / "frontend" / "dist"
 app.mount("/", StaticFiles(directory=DIST_DIR, html=True), name="frontend")
 
 
-if __name__ == '__main__':
-    uvicorn.run('app.main:app', host='127.0.0.1', port=8000)
+if __name__ == "__main__":
+    uvicorn.run("app.main:app", host="127.0.0.1", port=8000)

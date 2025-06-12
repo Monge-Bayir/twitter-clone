@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
 from app.database import Base
 
+
 class Like(Base):
     __tablename__ = "likes"
 
@@ -12,4 +13,6 @@ class Like(Base):
     tweet = relationship("Tweet", back_populates="likes")
     user = relationship("User", back_populates="likes")
 
-    __table_args__ = (UniqueConstraint('tweet_id', 'user_id', name='_tweet_user_like_uc'),)
+    __table_args__ = (
+        UniqueConstraint("tweet_id", "user_id", name="_tweet_user_like_uc"),
+    )

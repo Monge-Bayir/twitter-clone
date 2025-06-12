@@ -5,6 +5,7 @@ from app.user.dao import UserDAO
 
 router = APIRouter(prefix="/api/tweets", tags=["Likes"])
 
+
 @router.post("/{tweet_id}/likes")
 async def like_tweet(tweet_id: int, api_key: str = Header(...)):
     user = await UserDAO.find_by_api_key(api_key)
@@ -15,6 +16,7 @@ async def like_tweet(tweet_id: int, api_key: str = Header(...)):
         raise HTTPException(status_code=400, detail="Already liked")
     await LikeDAO.like_tweet(tweet_id, user.id)
     return {"result": "True"}
+
 
 @router.delete("/{tweet_id}/likes")
 async def unlike_tweet(tweet_id: int, api_key: str = Header(...)):

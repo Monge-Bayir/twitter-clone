@@ -8,11 +8,9 @@ from app.user.dao import UserDAO
 
 router = APIRouter(prefix="/api", tags=["Media"])
 
+
 @router.post("/medias")
-async def upload_media(
-    file: UploadFile = File(...),
-    api_key: str = Header(...)
-):
+async def upload_media(file: UploadFile = File(...), api_key: str = Header(...)):
     user = await UserDAO.find_by_api_key(api_key)
     if not user:
         raise HTTPException(status_code=401, detail="Invalid API key")
@@ -27,7 +25,4 @@ async def upload_media(
         await session.commit()
         await session.refresh(media)
 
-    return {
-        "result": True,
-        "media_id": media.id
-    }
+    return {"result": True, "media_id": media.id}

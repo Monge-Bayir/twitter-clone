@@ -3,6 +3,7 @@ from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from app.database import Base
 
+
 class Tweet(Base):
     __tablename__ = "tweets"
 
