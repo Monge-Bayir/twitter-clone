@@ -20,7 +20,7 @@ async def upload_media(file: UploadFile = File(...), api_key: str = Header(...))
         shutil.copyfileobj(file.file, f)
 
     async with async_session_maker() as session:
-        media = Media(file_path=file_location)  # ✅ корректное поле
+        media = Media(file_path=file_location)
         session.add(media)
         await session.commit()
         await session.refresh(media)

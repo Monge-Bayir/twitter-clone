@@ -3,6 +3,7 @@ FROM python:3.9.7-slim
 WORKDIR /app
 COPY ./app /app/app
 COPY .env /app
+COPY ./frontend /app/frontend
 COPY alembic.ini /app
 COPY requirements.txt /app
 

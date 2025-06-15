@@ -9,8 +9,16 @@ from sqlalchemy import pool
 
 from alembic import context
 
+
+
 sys.path.insert(0, dirname(dirname(dirname(abspath(__file__)))))
 
+
+from app.media.models import Media
+from app.user.models import User
+from app.follower.models import Follower
+from app.likes.models import Like
+from app.tweet.models import Tweet
 from app.database import Base
 from app.config import settings
 
