@@ -24,13 +24,13 @@ cd twitter-clone
 ### 2. Заполни .env
 ```env
 
-DB_HOST=db
+DB_HOST=postgres
 DB_PORT=5432
 DB_USER=postgres
 DB_PASS=postgres
 DB_NAME=postgres
 
-SECRET_KEY=sjKZ2cvr4cPVh7ooGcqgJEpLEvxIsSEHgPcRWMXn/Hs=
+SECRET_KEY=<ваш секретный ключ>
 ALGORITHM=HS256
 ```
 
@@ -61,8 +61,34 @@ nginx.conf — конфигурация прокси
 
 docker-compose.yaml — все сервисы
 
+### Разработка
+
+Запуск только бэкенда (для разработки)
+
+```bash
+cd app
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+# или venv\Scripts\activate (Windows)
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
+
+Сборка фронтенда
+
+Фронтенд уже собран и находится в frontend/dist/. Для разработки:
+
+Откройте frontend/index.html в браузере
+Используйте Live Server в VS Code
+
 ### ⚠️ Примечания
 FastAPI ожидает .env, иначе не поднимется подключение к БД.
-Создай через /docs, пользователя с api_key = 'test'
+Создай через /api/docs, пользователя с api_key = 'test'
+Либо http://localhost/api/users/me?name=YOURNAME&api_key=test
 
 Убедись, что Docker Desktop работает
+
+### Авторизация
+
+<img width="1680" alt="Снимок экрана 2025-06-15 в 18 00 44" src="https://github.com/user-attachments/assets/c35c8ceb-c28b-4fd4-a217-9c0f6c2828a9" />
+через это окошко идет авторизация через api_key
