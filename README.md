@@ -36,7 +36,7 @@ ALGORITHM=HS256
 
 ## 3. Собери и запусти
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 🔗 Frontend: http://localhost
 
