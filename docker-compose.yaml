@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   postgres:
-    command: postgres -p 5434
+    command: postgres -p ${DB_PORT}
     image: postgres:13
     environment:
       POSTGRES_USER: ${DB_USER}
